@@ -1,0 +1,16 @@
+.jumbotron {
+	background: #0e3286;
+	color: #cc3433;
+}
+
+h3 {
+	color: white;
+}
+
+.panel-primary>.panel-heading {
+	background-color: #0e3286;
+}
+
+.btn-primary {
+	background-color: #0e3286;
+}
