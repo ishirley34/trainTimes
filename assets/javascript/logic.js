@@ -1,35 +1,45 @@
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAryQ9vl3hfuHd-KQnxkgCB4HnKTzXZjik",
-    authDomain: "traintimes-e77ff.firebaseapp.com",
-    databaseURL: "https://traintimes-e77ff.firebaseio.com",
-    storageBucket: "traintimes-e77ff.appspot.com",
-    messagingSenderId: "309003869991"
-  };
+// Initialize Firebase
+var config = {
+apiKey: "AIzaSyAryQ9vl3hfuHd-KQnxkgCB4HnKTzXZjik",
+authDomain: "traintimes-e77ff.firebaseapp.com",
+databaseURL: "https://traintimes-e77ff.firebaseio.com",
+storageBucket: "traintimes-e77ff.appspot.com",
+messagingSenderId: "309003869991"
+};
 
-  firebase.initializeApp(config);
+firebase.initializeApp(config);
 
-  // This makes the firebase easier to call later in the code
-  var database = firebase.database();
+// This makes the firebase easier to call later in the code
+var database = firebase.database();
 
-  // Button for adding Trains
-  $("#add-train-btn").on("click", function(){
+var trainName;
+var trainDest;
+var trainTime0;
+var freq;
+var nextTrain;
+var nextTrainTime;
 
-  	// This keeps the page from refreshing when the submit button is clicked
+// Button for adding Trains
+$("#add-train-btn").on("click", function(){
+
+	// This keeps the page from refreshing when the submit button is clicked
   	event.preventDefault();
 
   	// This takes the user input
-  	var trainName = $("#train-name-input").val().trim();
-  	var trainDest = $("#destination-input").val().trim();
-  	var trainStart0 = moment($("#train-time-input").val().trim(), "HH:mm").format("X");
-  	var freq = $("#freq-input").val().trim();
+  	trainName = $("#train-name-input").val().trim();
+  	trainDest = $("#destination-input").val().trim();
+  	trainTime0 = $("#train-time-input").val().trim();
+  	freq = $("#freq-input").val().trim();
 
   	// This creates a lolcal temp object for the database
   	var newTrain = {
   		train: trainName,
   		dest: trainDest,
-  		start0: trainStart0,
-  		frequency: freq
+  		time0: trainTime0,
+  		frequency: freq,
+  		// train1: nextTrain,
+  		// trainTime1: nextTrainTime
+
   	}; // closes newTrain object
 
   	// Uploads the data to the database
@@ -46,15 +56,44 @@
 
 	// This keeps the page form refreshing if enter is hit
 	return false;
-  }); // This closes the add-train-btn listener
+}); // This closes the add-train-btn listener
 
-  database.ref().on("child_added", function(childSnapshot, prevChildKey) {
+database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
   	// Stores everything into a variable
   	var trainName = childSnapshot.val().train;
 	var trainDest = childSnapshot.val().dest;
-	var trainStart0 = childSnapshot.val().start0;
-	var freq = childSnapshot.val().freq;
+	var trainTime0 = childSnapshot.val().time0;
+	var trainFreq = childSnapshot.val().frequency;
+	// var nextTrain = childSnapshot.val().train1;
+	// var nextTrainTime = childSnapshot.val().trainTime1;
 
-	// MATH
-  })
+	// Formats the time back to HH:mm
+	var timeFormat = moment(trainTime0, "HH:mm").subtract(1, "years");
+	console.log(timeFormat);
+
+	// Does the math to convert the time
+	var diffTime = moment().diff(moment(timeFormat), "m..mm");
+	console.log(diffTime);
+	console.log(trainFreq);
+
+	var tRemainder = diffTime % trainFreq;
+	console.log(tRemainder);
+
+	var minutes = trainFreq - tRemainder;
+	console.log("minutes: " + minutes);
+
+	nextTrain = moment().add(minutes, "minutes");
+	console.log(nextTrain);
+
+	nextTrainTime = moment(nextTrain).format("hh:mm A");
+	console.log(nextTrainTime);
+
+	// This appends everything to the DOM
+	$("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" +
+  trainFreq + "</td><td>" + nextTrainTime + "</td><td>" + minutes + "</td></tr>");
+
+
+
+
+})
