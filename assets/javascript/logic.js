@@ -81,7 +81,6 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
 	// Subtracts the remainder from teh frequency
 	var minutes = trainFreq - tRemainder;
-	console.log("minutes: " + minutes);
 
 	// Adds the minutes to the current time
 	nextTrain = moment().add(minutes, "minutes");
