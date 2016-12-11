@@ -12,6 +12,7 @@ firebase.initializeApp(config);
 // This makes the firebase easier to call later in the code
 var database = firebase.database();
 
+// Global variables declared
 var trainName;
 var trainDest;
 var trainTime0;
@@ -60,7 +61,7 @@ $("#add-train-btn").on("click", function(){
 
 database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
-  	// Stores everything into a variable
+  	// Stores objects from firebase into a variable
   	var trainName = childSnapshot.val().train;
 	var trainDest = childSnapshot.val().dest;
 	var trainTime0 = childSnapshot.val().time0;
@@ -70,24 +71,23 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
 	// Formats the time back to HH:mm
 	var timeFormat = moment(trainTime0, "HH:mm").subtract(1, "years");
-	console.log(timeFormat);
 
 	// Does the math to convert the time
-	var diffTime = moment().diff(moment(timeFormat), "m..mm");
-	console.log(diffTime);
-	console.log(trainFreq);
+	var diffTime = moment().diff(moment(timeFormat), "minutes");
+	// var diffTime = moment().diff(moment.unix(timeFormat), "minutes");
 
+	// Takes the remainder of the division 
 	var tRemainder = diffTime % trainFreq;
-	console.log(tRemainder);
 
+	// Subtracts the remainder from teh frequency
 	var minutes = trainFreq - tRemainder;
 	console.log("minutes: " + minutes);
 
+	// Adds the minutes to the current time
 	nextTrain = moment().add(minutes, "minutes");
-	console.log(nextTrain);
 
+	// Formats the next train's time
 	nextTrainTime = moment(nextTrain).format("hh:mm A");
-	console.log(nextTrainTime);
 
 	// This appends everything to the DOM
 	$("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDest + "</td><td>" +
@@ -96,4 +96,4 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
 
 
-})
+}) //closes the child added listener
