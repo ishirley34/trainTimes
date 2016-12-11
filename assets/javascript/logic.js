@@ -28,9 +28,26 @@ $("#add-train-btn").on("click", function(){
 
   	// This takes the user input
   	trainName = $("#train-name-input").val().trim();
+  	// validates input
+  		if (trainName == "") {
+        	alert("Train name must be filled out");
+        	return false;
+   		};
   	trainDest = $("#destination-input").val().trim();
+  		if (trainDest == "") {
+        	alert("Train destination must be filled out");
+        	return false;
+   		};
   	trainTime0 = $("#train-time-input").val().trim();
+  		if (trainDest == "") {
+        	alert("Train time must be filled out");
+        	return false;
+   		};
   	freq = $("#freq-input").val().trim();
+  		if (freq == "") {
+        	alert("Train frequency must be filled out");
+        	return false;
+   		};
 
   	// This creates a lolcal temp object for the database
   	var newTrain = {
@@ -70,8 +87,8 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 	// var nextTrainTime = childSnapshot.val().trainTime1;
 
 	// Formats the time back to HH:mm
-	var timeFormat = moment(trainTime0, "HH:mm").subtract(1, "years");
-
+	var timeFormat = moment(trainTime0, "HH:mm MM DD YYYY").subtract(1, "years");
+	
 	// Does the math to convert the time
 	var diffTime = moment().diff(moment(timeFormat), "minutes");
 	// var diffTime = moment().diff(moment.unix(timeFormat), "minutes");
@@ -79,7 +96,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 	// Takes the remainder of the division 
 	var tRemainder = diffTime % trainFreq;
 
-	// Subtracts the remainder from teh frequency
+	// Subtracts the remainder from the frequency
 	var minutes = trainFreq - tRemainder;
 
 	// Adds the minutes to the current time
