@@ -55,8 +55,7 @@ $("#add-train-btn").on("click", function(){
   		dest: trainDest,
   		time0: trainTime0,
   		frequency: freq,
-  		// train1: nextTrain,
-  		// trainTime1: nextTrainTime
+
 
   	}; // closes newTrain object
 
